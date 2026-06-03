@@ -9,21 +9,34 @@ import { submitSurvey } from "@/lib/surveyService";
 import { questions, sections } from "@/lib/mockData";
 import type { SurveySubmission } from "@/lib/types";
 
-const SCALE_EXPLANATION =
-  "Se responderá de acuerdo a los siguientes criterios:\n" +
-  "• 1 (AUSENTE): Nada.\n" +
-  "• 2 (LEVE): Los síntomas son tolerables – el paciente puede hacer sus actividades diarias.\n" +
-  "• 3 (MODERADO): Los síntomas son molestos – interfieren parcialmente con la actividad diaria.\n" +
-  "• 4 (SEVERO): Los síntomas son intolerables – no es posible realizar las actividades cotidianas.";
-
 function IntroCard() {
   return (
     <div className="bg-white rounded-xl p-5 mb-3 shadow-card border-l-4 border-teal">
       <h2 className="font-serif text-[18px] text-[#1e1e1e] mb-3">
         Escala de evaluación
       </h2>
-      <div className="text-[13px] text-gray-600 leading-relaxed whitespace-pre-line">
-        {SCALE_EXPLANATION}
+      <div className="text-[13px] text-gray-600 leading-relaxed">
+        <p className="mb-2">
+          Se responderá de acuerdo a los siguientes criterios:
+        </p>
+        <div className="space-y-1.5">
+          <p>
+            <span className="font-semibold" style={{ color: "#1D9E75" }}>AUSENTE</span>
+            {" — "}Nada.
+          </p>
+          <p>
+            <span className="font-semibold" style={{ color: "#5DCAA5" }}>LEVE</span>
+            {" — "}Los síntomas son tolerables – el paciente puede hacer sus actividades diarias.
+          </p>
+          <p>
+            <span className="font-semibold" style={{ color: "#EF9F27" }}>MODERADO</span>
+            {" — "}Los síntomas son molestos – interfieren parcialmente con la actividad diaria.
+          </p>
+          <p>
+            <span className="font-semibold" style={{ color: "#E24B4A" }}>SEVERO</span>
+            {" — "}Los síntomas son intolerables – no es posible realizar las actividades cotidianas.
+          </p>
+        </div>
       </div>
     </div>
   );
