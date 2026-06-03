@@ -1,7 +1,8 @@
-import { Question, getScoreClass, getScoreLabel } from "@/lib/mockData";
+import { getScoreClass, getScoreLabel } from "@/lib/mockData";
+import type { QuestionStats } from "@/lib/types";
 
 interface SummaryTableProps {
-  questions: Question[];
+  questions: QuestionStats[];
   getBarColor: (value: number) => string;
 }
 
@@ -29,21 +30,21 @@ export default function SummaryTable({ questions, getBarColor }: SummaryTablePro
       </thead>
       <tbody>
         {questions.map((q) => {
-          const pct = Math.round((q.average / 10) * 100);
+          const pct = Math.round((q.average / 3) * 100);
           return (
             <tr
-              key={q.id}
+              key={q.questionId}
               className="hover:bg-gray-50 transition-colors"
             >
-              <td className="px-5 py-3 text-[13px] text-gray-400">{q.id}</td>
+              <td className="px-5 py-3 text-[13px] text-gray-400">{q.questionId}</td>
               <td className="py-3 text-[13.5px] text-[#1f2937]">
-                {q.shortName}
+                {q.text}
               </td>
               <td className="py-3 text-center">
                 <span className="font-semibold text-[15px] text-[#1f2937]">
                   {q.average.toFixed(1)}
                 </span>
-                <span className="text-[11px] text-gray-400">/10</span>
+                <span className="text-[11px] text-gray-400">/3</span>
               </td>
               <td className="py-3">
                 <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden w-[120px]">

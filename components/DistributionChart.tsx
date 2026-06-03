@@ -1,7 +1,7 @@
-import { Question } from "@/lib/mockData";
+import type { QuestionStats } from "@/lib/types";
 
 interface DistributionChartProps {
-  question: Question;
+  question: QuestionStats;
   getBarColor: (value: number) => string;
   fullWidth?: boolean;
 }
@@ -11,7 +11,7 @@ export default function DistributionChart({
   getBarColor,
   fullWidth = false,
 }: DistributionChartProps) {
-  const max = Math.max(...question.distribution);
+  const max = Math.max(...question.distribution.map((item) => item.count));
 
   return (
     <div
@@ -32,25 +32,24 @@ export default function DistributionChart({
       </div>
 
       <div className="space-y-2">
-        {question.distribution.map((count, i) => {
-          const value = i + 1;
-          const pct = max > 0 ? Math.round((count / max) * 100) : 0;
+        {question.distribution.map((item) => {
+          const pct = max > 0 ? Math.round((item.count / max) * 100) : 0;
           return (
-            <div key={value} className="flex items-center gap-2.5 text-[13px]">
+            <div key={item.value} className="flex items-center gap-2.5 text-[13px]">
               <span className="w-[22px] text-right text-gray-600 font-medium flex-shrink-0">
-                {value}
+                {item.value}
               </span>
               <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
                 <div
                   className="h-full rounded transition-all duration-600"
                   style={{
                     width: `${pct}%`,
-                    background: getBarColor(value),
+                    background: getBarColor(item.value),
                   }}
                 />
               </div>
               <span className="w-[30px] text-right text-gray-400 text-[12px] flex-shrink-0">
-                {count}
+                {item.count}
               </span>
             </div>
           );
