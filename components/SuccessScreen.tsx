@@ -18,8 +18,7 @@ export default function SuccessScreen() {
         ¡Muchas gracias!
       </h2>
       <p className="text-[15px] text-gray-400 leading-relaxed max-w-[280px]">
-        Tu respuesta fue registrada. Tu opinión nos ayuda a mejorar la atención
-        cada día.
+        Tu respuesta fue registrada
       </p>
     </div>
   );

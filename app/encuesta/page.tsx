@@ -9,20 +9,12 @@ import { submitSurvey } from "@/lib/surveyService";
 import { questions, sections } from "@/lib/mockData";
 import type { SurveySubmission } from "@/lib/types";
 
-function getDia(): number {
-  const start = new Date("2026-05-25");
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const diff = Math.floor((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-  return Math.min(Math.max(diff + 1, 1), 7);
-}
-
 const SCALE_EXPLANATION =
   "Se responderá de acuerdo a los siguientes criterios:\n" +
-  "• 0 (AUSENTE): Nada.\n" +
-  "• 1 (LEVE): Los síntomas son tolerables – el paciente puede hacer sus actividades diarias.\n" +
-  "• 2 (MODERADO): Los síntomas son molestos – interfieren parcialmente con la actividad diaria.\n" +
-  "• 3 (SEVERO): Los síntomas son intolerables – no es posible realizar las actividades cotidianas.";
+  "• 1 (AUSENTE): Nada.\n" +
+  "• 2 (LEVE): Los síntomas son tolerables – el paciente puede hacer sus actividades diarias.\n" +
+  "• 3 (MODERADO): Los síntomas son molestos – interfieren parcialmente con la actividad diaria.\n" +
+  "• 4 (SEVERO): Los síntomas son intolerables – no es posible realizar las actividades cotidianas.";
 
 function IntroCard() {
   return (
@@ -48,8 +40,8 @@ function SectionHeader({ title }: { title: string }) {
 }
 
 export default function EncuestaPage() {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(false);
+  const [documento, setDocumento] = useState("");
+  const [documentoError, setDocumentoError] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(
     new Array(questions.length).fill(null)
   );
@@ -61,9 +53,9 @@ export default function EncuestaPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const answeredCount = touched.filter((t) => t).length;
-  const emailFilled = email.length > 0 ? 1 : 0;
+  const documentoFilled = documento.length > 0 ? 1 : 0;
   const total = questions.length + 1;
-  const progress = Math.round(((answeredCount + emailFilled) / total) * 100);
+  const progress = Math.round(((answeredCount + documentoFilled) / total) * 100);
 
   function selectAnswer(index: number, value: number) {
     const newAnswers = [...answers];
@@ -74,18 +66,19 @@ export default function EncuestaPage() {
     setTouched(newTouched);
   }
 
-  function validateEmail(e: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  function validateDNI(d: string): boolean {
+    if (!/^\d{7,8}$/.test(d)) return false;
+    return true;
   }
 
   function isValid(): boolean {
     let valid = true;
 
-    if (!validateEmail(email)) {
-      setEmailError(true);
+    if (!validateDNI(documento)) {
+      setDocumentoError(true);
       valid = false;
     } else {
-      setEmailError(false);
+      setDocumentoError(false);
     }
 
     const firstUntouched = touched.findIndex((t) => !t);
@@ -103,10 +96,9 @@ export default function EncuestaPage() {
     setErrorMessage(null);
 
     try {
-      const dia = getDia();
       const payload: SurveySubmission = {
-        email,
-        dia,
+        documento,
+        dia: 1,
         respuestas: answers as number[],
       };
       const result = await submitSurvey(payload);
@@ -149,29 +141,32 @@ export default function EncuestaPage() {
         {/* Intro Card */}
         <IntroCard />
 
-        {/* Email Input */}
+        {/* Document Input */}
         <div className="bg-white rounded-xl p-5 mb-3.5 shadow-card">
           <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2">
-            Tu correo electrónico
+            Tu número de documento
           </p>
           <input
-            type="email"
-            value={email}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={documento}
             onChange={(e) => {
-              setEmail(e.target.value);
-              if (emailError) setEmailError(false);
+              const val = e.target.value.replace(/\D/g, "").slice(0, 8);
+              setDocumento(val);
+              if (documentoError) setDocumentoError(false);
             }}
-            placeholder="ejemplo@correo.com"
-            autoComplete="email"
+            placeholder="Ej: 12345678"
+            autoComplete="off"
             className={`w-full font-sans text-base text-[#1e1e1e] border-2 rounded-lg px-4 py-3 outline-none transition-colors ${
-              emailError
+              documentoError
                 ? "border-red focus:border-red"
                 : "border-[#ddd] focus:border-teal"
             }`}
           />
-          {emailError && (
+          {documentoError && (
             <p className="text-xs text-red mt-1.5">
-              Por favor ingresá un email válido.
+              Ingresá un documento argentino válido (7 u 8 dígitos).
             </p>
           )}
         </div>
@@ -229,9 +224,9 @@ export default function EncuestaPage() {
       <div className="px-4 mt-2 pb-12">
         <button
           onClick={handleSubmit}
-          disabled={loading || !touched.every((t) => t) || email.length === 0}
+          disabled={loading || !touched.every((t) => t) || documento.length === 0}
           className={`w-full py-[15px] rounded-xl font-sans text-base font-semibold transition-all ${
-            loading || !touched.every((t) => t) || email.length === 0
+            loading || !touched.every((t) => t) || documento.length === 0
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-teal text-white active:scale-[0.98]"
           }`}

@@ -79,7 +79,7 @@ export async function fetchDashboard(): Promise<DashboardData> {
   });
 
   // Filter out empty rows
-  const validRows = csvData.filter((r) => r.email && r.dia);
+  const validRows = csvData.filter((r) => r.documento && r.dia);
 
   // ── Global stats ────────────────────────────────────────────────────────────
   const globalStats: QuestionStats[] = questions.map((q) => {
@@ -91,10 +91,12 @@ export async function fetchDashboard(): Promise<DashboardData> {
     const sum = values.reduce((a, b) => a + b, 0);
     const avg = values.length > 0 ? sum / values.length : 0;
 
-    const distribution = q.scale.map((opt) => {
-      const count = values.filter((v) => v === opt.value).length;
+    // Build distribution from all possible values (0-4 to cover extra values in data)
+    const allValues = [0, 1, 2, 3, 4];
+    const distribution = allValues.map((val) => {
+      const count = values.filter((v) => v === val).length;
       const percentage = values.length > 0 ? Math.round((count / values.length) * 100) : 0;
-      return { value: opt.value, count, percentage };
+      return { value: val, count, percentage };
     });
 
     const sectionTitle = sections.find((s) => s.id === q.sectionId)?.title ?? "";
@@ -109,27 +111,27 @@ export async function fetchDashboard(): Promise<DashboardData> {
   });
 
   // ── Per-user responses ───────────────────────────────────────────────────────
-  // Group rows by email
-  const byEmail = new Map<string, CsvRow[]>();
+  // Group rows by documento
+  const byDocumento = new Map<string, CsvRow[]>();
   for (const row of validRows) {
-    if (!byEmail.has(row.email)) {
-      byEmail.set(row.email, []);
+    if (!byDocumento.has(row.documento)) {
+      byDocumento.set(row.documento, []);
     }
-    byEmail.get(row.email)!.push(row);
+    byDocumento.get(row.documento)!.push(row);
   }
 
-  const userResponses: UserResponse[] = Array.from(byEmail.entries()).map(
-    ([email, userRows]) => {
+  const userResponses: UserResponse[] = Array.from(byDocumento.entries()).map(
+    ([documento, userRows]) => {
       // Sort by actual date
       const sorted = userRows.sort(sortByDate);
       const days = buildUserDays(sorted);
-      return { email, days };
+      return { documento, days };
     }
   );
 
   return {
     totalResponses: validRows.length,
-    totalUsers: byEmail.size,
+    totalUsers: byDocumento.size,
     globalStats,
     userResponses,
   };

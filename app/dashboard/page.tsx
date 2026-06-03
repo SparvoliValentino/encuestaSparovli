@@ -177,12 +177,12 @@ export default function DashboardPage() {
                   const missedDays = user.days.filter((d) => d.missed).length;
                   return (
                     <button
-                      key={user.email}
+                      key={user.documento}
                       onClick={() => setSelectedUser(user)}
                       className="bg-white rounded-xl p-4 shadow-card text-left hover:shadow-card-hover transition-shadow cursor-pointer"
                     >
                       <p className="text-[13px] font-semibold text-[#1e1e1e] mb-1 truncate">
-                        {user.email}
+                        {user.documento}
                       </p>
                       <p className="text-[11px] text-gray-400">
                         {answeredDays} día{answeredDays !== 1 ? "s" : ""} respondido
@@ -257,7 +257,7 @@ function UserModal({ user, onClose }: { user: UserResponse; onClose: () => void 
         {/* Modal header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <div>
-            <h2 className="font-serif text-[18px] text-[#1e1e1e]">{user.email}</h2>
+            <h2 className="font-serif text-[18px] text-[#1e1e1e]">Paciente {user.documento}</h2>
             <p className="text-[12px] text-gray-400">
               {user.days.filter((d) => !d.missed).length} días respondidos ·{" "}
               {user.days.filter((d) => d.missed).length} sin respuesta

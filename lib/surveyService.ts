@@ -17,10 +17,12 @@ export async function submitSurvey(payload: SurveyPayload): Promise<SurveyRespon
 
   const response = await fetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "text/plain",
+    },
     body: JSON.stringify(payload),
   });
 
   const data: SurveyResponse = await response.json();
-
   return data;
 }

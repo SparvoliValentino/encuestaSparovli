@@ -11,8 +11,12 @@ export default function TopBar({ title, date }: TopBarProps) {
         <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
           {date}
         </span>
-        <button className="text-[13px] font-medium text-teal-dark bg-teal-light px-3.5 py-1.5 rounded-lg hover:bg-teal-mid/30 transition-colors">
-          ↓ Exportar CSV
+        <button
+          onClick={() => { 
+            window.open(process.env.NEXT_PUBLIC_SURVEY_SHEET_CSV_URL, "_blank");
+          }}
+          className="text-[13px] font-medium text-teal-dark bg-teal-light px-3.5 py-1.5 rounded-lg hover:bg-teal-mid/30 transition-colors">
+          Ver Excel
         </button>
       </div>
     </div>

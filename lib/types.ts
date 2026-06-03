@@ -27,7 +27,7 @@ export interface SurveySection {
 
 // ─── Submission ───────────────────────────────────────────────────────────────
 export interface SurveySubmission {
-  email: string;
+  documento: string;
   dia: number;
   respuestas: number[];
 }
@@ -35,7 +35,7 @@ export interface SurveySubmission {
 // ─── CSV row from Google Sheets ───────────────────────────────────────────────
 export interface CsvRow {
   fecha: string;
-  email: string;
+  documento: string;
   dia: string;
   pregunta_1: string;
   pregunta_2: string;
@@ -56,7 +56,7 @@ export interface UserDayEntry {
 
 // ─── Per-user full response record ────────────────────────────────────────────
 export interface UserResponse {
-  email: string;
+  documento: string;
   days: UserDayEntry[];
 }
 

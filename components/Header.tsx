@@ -19,7 +19,7 @@ export default function Header({ progress }: HeaderProps) {
         </span>
       </div>
       <p className="text-xs text-gray-400 pl-[42px]">
-        Encuesta de satisfacción del paciente
+        Encuesta de sintomas del paciente
       </p>
       <div className="h-[3px] bg-gray-200 rounded-full mt-3.5 overflow-hidden">
         <div
